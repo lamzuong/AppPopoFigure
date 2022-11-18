@@ -7,9 +7,12 @@ import Welcome from "./screen/Welcome";
 import Login from "./screen/Login";
 import Register from "./screen/Register";
 import Cart from "./screen/Product/Cart";
+import ProductDetail from "./screen/Product/ProductDetail";
+import ProcessingOrder from "./screen/Product/ProcessingOrder";
 // import { useAuthentication } from "./utils/hooks/useAuthenication";
 import { auth } from "./firebase";
 import "./firebase";
+
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -33,6 +36,8 @@ export default function App() {
             <Stack.Screen name="Register" component={Register} />
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="Cart" component={Cart} />
+            <Stack.Screen name="ProductDetail" component={ProductDetail} />
+        <Stack.Screen name="ProcessingOrder" component={ProcessingOrder} />
           </Stack.Group>
         )}
       </Stack.Navigator>
