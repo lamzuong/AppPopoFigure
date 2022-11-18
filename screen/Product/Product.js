@@ -9,15 +9,17 @@ import {
   ScrollView,
   Dimensions,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { createContext, useEffect, useState } from "react";
 import { Ionicons, EvilIcons, MaterialIcons } from "@expo/vector-icons";
 import { colors } from "../color";
 import ItemProduct from "./ItemProduct";
 import ItemHeader from "./ItemHeader";
-// const axios = require("axios").default;
+const axios = require("axios").default;
 // import axios from "react-native-axios";
 
+export var ListOrderContext = createContext();
 export default function Product({ navigation }) {
+  const userId = "1";
   const [valueInput, setValueInput] = useState("");
   const [listBrand, setListBrand] = useState([
     "Tất cả",
@@ -27,34 +29,47 @@ export default function Product({ navigation }) {
     "Megahouse",
   ]);
   const [listProduct, setListProduct] = useState([]);
+  const [listProductShow, setListProductShow] = useState([]);
+  const [listCart, setListCart] = useState([]);
+
   const [chooseBrand, setChooseBrand] = useState("Tất cả");
   const [listProductSearch, setListProductSearch] = useState([]);
 
-  // useEffect(() => {
-  //   axios
-  //     .get("https://6369c30015219b84961e1e52.mockapi.io/api/product")
-  //     .then((todo) => setListProduct(todo.data));
-  //   console.log(1);
-  // }, []);
   useEffect(() => {
-    const getProducts = async () => {
+    axios
+      .get("https://6375d6c2b5f0e1eb85fab4a2.mockapi.io/api/product")
+      .then(
+        (todo) => (setListProduct(todo.data), setListProductShow(todo.data))
+      );
+  }, []);
+  useEffect(() => {
+    setListProductShow([]);
+    var list = [];
+    listProduct.forEach((e) => {
+      if (e.brand == chooseBrand || chooseBrand == "Tất cả") {
+        list.push(e);
+      }
+    });
+    setListProductShow(list);
+  }, [chooseBrand]);
+  useEffect(() => {
+    const getCarts = async () => {
       try {
         const response = await fetch(
-          "https://6375d6c2b5f0e1eb85fab4a2.mockapi.io/api/product"
+          "https://6375d6c2b5f0e1eb85fab4a2.mockapi.io/api/cart"
         );
         const json = await response.json();
-        // console.log(json);
-        setListProduct(json);
+        setListCart(json);
       } catch (error) {
         console.error(error);
       }
     };
-    getProducts();
+    getCarts();
   }, []);
   useEffect(() => {
     var list = [];
     listProduct.forEach((e) => {
-      if (e.name.includes(valueInput)) {
+      if (e.name.toLowerCase().includes(valueInput.toLowerCase())) {
         list.push(e);
       }
     });
@@ -63,11 +78,30 @@ export default function Product({ navigation }) {
       setListProductSearch([]);
     }
   }, [valueInput]);
+
+  const [myCart, setMyCart] = useState([]);
+  useEffect(() => {
+    listCart.forEach((e) => {
+      if (e.userId == userId) {
+        setMyCart(e.listProduct);
+      }
+    });
+  }, [listCart.length]);
+  ListOrderContext = createContext({ listOrder: myCart });
   return (
     <View style={styles.container}>
       <StatusBar />
+      <ListOrderContext.Provider
+        value={{ listOrder: myCart }}
+      ></ListOrderContext.Provider>
       <View style={styles.header}>
-        <Ionicons name="arrow-back-outline" size={40} color="white" />
+        <TouchableOpacity
+          onPress={() => {
+            navigation.goBack();
+          }}
+        >
+          <Ionicons name="arrow-back-outline" size={40} color="white" />
+        </TouchableOpacity>
         <View style={styles.txtSearch}>
           <EvilIcons name="search" size={28} color="black" />
           <View style={{ marginHorizontal: 2 }}></View>
@@ -100,13 +134,18 @@ export default function Product({ navigation }) {
           data={listProductSearch}
           renderItem={({ item, index }) => {
             return (
-              <TouchableOpacity style={styles.itemFlat}>
+              <TouchableOpacity
+                style={styles.itemFlat}
+                onPress={() => {
+                  navigation.navigate("ProductDetail", { item: item });
+                }}
+              >
                 <ItemProduct item={item} />
               </TouchableOpacity>
             );
           }}
-          keyExtractor={(item, index) => "$" + index}
-          key={"$"}
+          keyExtractor={(item, index) => "@" + index}
+          key={"@"}
           numColumns={2}
           showsVerticalScrollIndicator={false}
         />
@@ -133,13 +172,18 @@ export default function Product({ navigation }) {
             />
           </View>
           <FlatList
-            data={listProduct}
+            data={listProductShow}
             renderItem={({ item, index }) => {
-              return chooseBrand == "Tất cả" || chooseBrand == item.brand ? (
-                <TouchableOpacity style={styles.itemFlat}>
+              return (
+                <TouchableOpacity
+                  style={styles.itemFlat}
+                  onPress={() => {
+                    navigation.navigate("ProductDetail", { item: item });
+                  }}
+                >
                   <ItemProduct item={item} />
                 </TouchableOpacity>
-              ) : null;
+              );
             }}
             keyExtractor={(item, index) => "$" + index}
             key={"$"}
