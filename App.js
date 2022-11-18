@@ -13,7 +13,6 @@ import ProcessingOrder from "./screen/Product/ProcessingOrder";
 import { auth } from "./firebase";
 import "./firebase";
 
-
 const Stack = createNativeStackNavigator();
 export default function App() {
   // const { user } = useAuthentication();
@@ -37,7 +36,7 @@ export default function App() {
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="Cart" component={Cart} />
             <Stack.Screen name="ProductDetail" component={ProductDetail} />
-        <Stack.Screen name="ProcessingOrder" component={ProcessingOrder} />
+            <Stack.Screen name="ProcessingOrder" component={ProcessingOrder} />
           </Stack.Group>
         )}
       </Stack.Navigator>

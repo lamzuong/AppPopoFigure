@@ -27,10 +27,10 @@ import { useNavigation } from "@react-navigation/native";
 
 // import axios from "axios";
 
-
 const axios = require("axios").default;
 
-const logo ="https://res.cloudinary.com/daoyryngu/image/upload/v1668668980/logoPoPo_k3safb.png"
+const logo =
+  "https://res.cloudinary.com/daoyryngu/image/upload/v1668668980/logoPoPo_k3safb.png";
 const idUser = 1;
 export default function Profile() {
   const navigation = useNavigation();
@@ -44,7 +44,6 @@ export default function Profile() {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.profile}>Hồ sơ</Text>
-
       </View>
       <View style={styles.avatar}>
         <Image
@@ -66,7 +65,7 @@ export default function Profile() {
 
       <TouchableOpacity
         style={styles.viewlist}
-        onPress={() => navigation.navigate("Cart",{infoUser})}
+        onPress={() => navigation.navigate("Cart", { infoUser })}
       >
         <View style={{ flexDirection: "row" }}>
           <Ionicons
@@ -93,7 +92,7 @@ export default function Profile() {
           styles.viewlist,
           { marginTop: 50, justifyContent: "center", alignItems: "center" },
         ]}
-        onPress={()=>navigation.navigate("Welcome")}
+        onPress={() => navigation.navigate("Welcome")}
       >
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.selection}>Đăng xuất </Text>
@@ -113,8 +112,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 10,
     justifyContent: "center",
-    flexDirection:"row",
-    alignItems:"center"
+    flexDirection: "row",
+    alignItems: "center",
   },
 
   profile: {
