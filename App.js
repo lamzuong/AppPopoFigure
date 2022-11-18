@@ -5,21 +5,36 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Home from "./screen/Home";
 import Welcome from "./screen/Welcome";
 import Login from "./screen/Login";
+import Register from "./screen/Register";
 import Cart from "./screen/Product/Cart";
+// import { useAuthentication } from "./utils/hooks/useAuthenication";
+import { auth } from "./firebase";
+import "./firebase";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
+  // const { user } = useAuthentication();
+  const user = null;
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName="Home"
+        initialRouteName="Welcome"
         screenOptions={{ headerShown: false }}
       >
-        <Stack.Screen name="Welcome" component={Welcome} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Register" component={Register} />
-        <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Cart" component={Cart} />
+        {user ? (
+          <Stack.Group>
+            {/* <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="Cart" component={Cart} /> */}
+          </Stack.Group>
+        ) : (
+          <Stack.Group>
+            <Stack.Screen name="Welcome" component={Welcome} />
+            <Stack.Screen name="Login" component={Login} />
+            <Stack.Screen name="Register" component={Register} />
+            <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="Cart" component={Cart} />
+          </Stack.Group>
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );
