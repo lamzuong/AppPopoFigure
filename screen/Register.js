@@ -195,7 +195,7 @@ export default function Register({ navigation }) {
           flexDirection: "row",
         }}
         onPress={() => {
-          navigation.navigate("Login");
+          navigation.navigate("Login", { username: value.email });
         }}
       >
         <Text style={{ color: "grey" }}>Bạn đã có tài khoản? </Text>
