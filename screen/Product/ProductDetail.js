@@ -7,20 +7,21 @@ import {
   Image,
   ToastAndroid,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { colors } from "../color";
 import { Ionicons } from "@expo/vector-icons";
 import ReadMore from "react-native-read-more-text";
 const axios = require("axios").default;
+import { AuthContext } from "../Home";
 
 export default function ProductDetail({ route, navigation }) {
   const { item } = route.params;
   const [cart, setCart] = useState([]);
   const [rerender, setRerender] = useState(false);
-  const id = 1;
+  var { userId } = useContext(AuthContext);
   useEffect(() => {
     axios
-      .get("https://6375d6c2b5f0e1eb85fab4a2.mockapi.io/api/cart/" + id)
+      .get("https://6375d6c2b5f0e1eb85fab4a2.mockapi.io/api/cart/" + userId)
       .then((todo) => setCart(todo.data.listProduct));
   }, [rerender]);
   function addToCart() {
@@ -30,9 +31,12 @@ export default function ProductDetail({ route, navigation }) {
         e.amount++;
         duplicate = true;
         axios
-          .put("https://6375d6c2b5f0e1eb85fab4a2.mockapi.io/api/cart/" + id, {
-            listProduct: cart,
-          })
+          .put(
+            "https://6375d6c2b5f0e1eb85fab4a2.mockapi.io/api/cart/" + userId,
+            {
+              listProduct: cart,
+            }
+          )
           .then(setRerender(!rerender));
       }
     });
@@ -40,7 +44,7 @@ export default function ProductDetail({ route, navigation }) {
       var obj = item;
       obj["amount"] = 1;
       axios
-        .put("https://6375d6c2b5f0e1eb85fab4a2.mockapi.io/api/cart/" + id, {
+        .put("https://6375d6c2b5f0e1eb85fab4a2.mockapi.io/api/cart/" + userId, {
           listProduct: [...cart, obj],
         })
         .then(setRerender(!rerender));

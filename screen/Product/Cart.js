@@ -15,16 +15,17 @@ import { colors } from "../color";
 import ReadMore from "react-native-read-more-text";
 import { Checkbox } from "react-native-paper";
 const axios = require("axios").default;
+import { AuthContext } from "../Home";
 
 export default function Cart({ navigation }) {
   const [listRender, setListRender] = useState([]);
   const [hideDelete, setHideDelete] = useState(true);
   const [tempPrice, setTempPrice] = useState(0);
   const [rerender, setRerender] = useState(false);
-  const id = 1;
+  var { userId } = useContext(AuthContext);
   useEffect(() => {
     axios
-      .get("https://6375d6c2b5f0e1eb85fab4a2.mockapi.io/api/cart/" + id)
+      .get("https://6375d6c2b5f0e1eb85fab4a2.mockapi.io/api/cart/" + userId)
       .then((todo) => setListRender(todo.data.listProduct));
   }, [rerender]);
 
@@ -68,7 +69,7 @@ export default function Cart({ navigation }) {
   function add(index) {
     var amount = Number.parseInt(listRender[index].amount) + 1;
     listRender[index].amount = amount;
-    handleUpdate(1, listRender);
+    handleUpdate(userId, listRender);
   }
   function sub(index) {
     var amountNow = Number.parseInt(listRender[index].amount);
@@ -77,7 +78,7 @@ export default function Cart({ navigation }) {
     } else {
       var amount = Number.parseInt(listRender[index].amount) - 1;
       listRender[index].amount = amount;
-      handleUpdate(1, listRender);
+      handleUpdate(userId, listRender);
     }
   }
   function remove(index) {
@@ -91,7 +92,7 @@ export default function Cart({ navigation }) {
         text: "Có",
         onPress: () => {
           listRender.splice(index, 1);
-          handleUpdate(1, listRender);
+          handleUpdate(userId, listRender);
           setRerender(!rerender);
         },
       },
