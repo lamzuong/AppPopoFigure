@@ -10,7 +10,6 @@ export default function ItemProduct(props) {
       <View>
         <Text style={styles.nameProduct}>{item.name}</Text>
         <Text style={styles.priceProduct}>
-          ${" "}
           {item.price.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.") +
             " đ"}
         </Text>

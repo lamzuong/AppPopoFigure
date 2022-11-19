@@ -5,14 +5,48 @@ import {
   TouchableOpacity,
   ScrollView,
   Image,
+  ToastAndroid,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { colors } from "../color";
-import { Ionicons, EvilIcons, MaterialIcons } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import ReadMore from "react-native-read-more-text";
+const axios = require("axios").default;
 
 export default function ProductDetail({ route, navigation }) {
   const { item } = route.params;
+  const [cart, setCart] = useState([]);
+  const [rerender, setRerender] = useState(false);
+  const id = 1;
+  useEffect(() => {
+    axios
+      .get("https://6375d6c2b5f0e1eb85fab4a2.mockapi.io/api/cart/" + id)
+      .then((todo) => setCart(todo.data.listProduct));
+  }, [rerender]);
+  function addToCart() {
+    var duplicate = false;
+    cart.forEach((e) => {
+      if (e.id == item.id) {
+        e.amount++;
+        duplicate = true;
+        axios
+          .put("https://6375d6c2b5f0e1eb85fab4a2.mockapi.io/api/cart/" + id, {
+            listProduct: cart,
+          })
+          .then(setRerender(!rerender));
+      }
+    });
+    if (duplicate == false) {
+      var obj = item;
+      obj["amount"] = 1;
+      axios
+        .put("https://6375d6c2b5f0e1eb85fab4a2.mockapi.io/api/cart/" + id, {
+          listProduct: [...cart, obj],
+        })
+        .then(setRerender(!rerender));
+    }
+    ToastAndroid.show("Thêm sản phẩm thành công!", ToastAndroid.SHORT);
+  }
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -41,38 +75,35 @@ export default function ProductDetail({ route, navigation }) {
         </TouchableOpacity>
         <Text style={styles.nameProduct}>{item.name}</Text>
         <Text style={styles.priceProduct}>
-          ${" "}
           {item.price.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.") +
             " đ"}
         </Text>
-        <Text style={styles.titleGeneral}>Thông tin</Text>
-        <View style={styles.contentGeneral}>
+        <Text style={styles.titleGeneral}>Thông tin chi tiết</Text>
+        <View style={styles.infoDetail}>
           <View style={styles.spaceRow}>
-            <Text style={{ fontWeight: "bold", fontSize: 15 }}>
-              Nhà sản xuất
-            </Text>
-            <Text>{item.brand}</Text>
+            <Text style={styles.labelProduct}>Nhà sản xuất</Text>
+            <Text style={styles.descProduct}>{item.brand}</Text>
           </View>
-          <View style={styles.spaceRow}>
-            <Text style={{ fontWeight: "bold", fontSize: 15 }}>
-              Số lượng có sẵn
-            </Text>
-            <Text>{item.amount}</Text>
-          </View>
+          <Text style={styles.labelProduct}>Mô tả</Text>
+          <View style={{ height: 8 }}></View>
+          <ReadMore
+            numberOfLines={5}
+            renderTruncatedFooter={renderTruncatedFooter}
+            renderRevealedFooter={renderRevealedFooter}
+          >
+            <Text style={styles.descProduct}>{item.description}</Text>
+          </ReadMore>
         </View>
-        <Text style={styles.titleGeneral}>Mô tả</Text>
-        <View style={{ height: 8 }}></View>
-        <ReadMore
-          numberOfLines={5}
-          renderTruncatedFooter={renderTruncatedFooter}
-          renderRevealedFooter={renderRevealedFooter}
-        >
-          <Text style={styles.descProduct}>{item.description}</Text>
-        </ReadMore>
+
         <View style={{ height: 20 }}></View>
       </ScrollView>
       <View style={{ padding: 10 }}>
-        <TouchableOpacity style={styles.btnAdd}>
+        <TouchableOpacity
+          style={styles.btnAdd}
+          onPress={() => {
+            addToCart();
+          }}
+        >
           <Text style={styles.txtAdd}>Thêm vào giỏ hàng</Text>
         </TouchableOpacity>
       </View>
@@ -81,14 +112,14 @@ export default function ProductDetail({ route, navigation }) {
 }
 const renderTruncatedFooter = (handlePress) => {
   return (
-    <Text style={{ color: "grey" }} onPress={handlePress}>
+    <Text style={{ color: "grey", fontSize: 17 }} onPress={handlePress}>
       Đọc thêm
     </Text>
   );
 };
 const renderRevealedFooter = (handlePress) => {
   return (
-    <Text style={{ color: "grey" }} onPress={handlePress}>
+    <Text style={{ color: "grey", fontSize: 17 }} onPress={handlePress}>
       Ẩn bớt
     </Text>
   );
@@ -102,6 +133,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     marginVertical: 5,
+    alignItems: "center",
   },
   header: {
     height: 65,
@@ -132,19 +164,24 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   descProduct: {
-    fontSize: 15,
+    fontSize: 17,
     marginTop: 8,
+  },
+  labelProduct: {
+    fontSize: 17,
+    fontWeight: "bold",
   },
   titleGeneral: {
     marginTop: 10,
     fontWeight: "bold",
     fontSize: 18,
   },
-  contentGeneral: {
+  infoDetail: {
+    marginTop: 10,
+    paddingHorizontal: 15,
+    paddingBottom: 15,
     backgroundColor: colors.lightGrey,
-    marginTop: 8,
-    padding: 10,
-    borderRadius: 10,
+    borderRadius: 15,
   },
   btnAdd: {
     backgroundColor: colors.orangeMain,

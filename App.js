@@ -7,6 +7,7 @@ import Welcome from "./screen/Welcome";
 import Cart from "./screen/Product/Cart";
 import ProductDetail from "./screen/Product/ProductDetail";
 import ProcessingOrder from "./screen/Product/ProcessingOrder";
+import Address from "./screen/Product/Address";
 
 const Stack = createNativeStackNavigator();
 export default function App() {
@@ -18,9 +19,26 @@ export default function App() {
       >
         <Stack.Screen name="Welcome" component={Welcome} />
         <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Cart" component={Cart} />
-        <Stack.Screen name="ProductDetail" component={ProductDetail} />
-        <Stack.Screen name="ProcessingOrder" component={ProcessingOrder} />
+        <Stack.Screen
+          name="Cart"
+          component={Cart}
+          options={{ animation: "fade_from_bottom" }}
+        />
+        <Stack.Screen
+          name="ProductDetail"
+          component={ProductDetail}
+          options={{ animation: "fade_from_bottom" }}
+        />
+        <Stack.Screen
+          name="ProcessingOrder"
+          component={ProcessingOrder}
+          options={{ animation: "fade_from_bottom" }}
+        />
+        <Stack.Screen
+          name="Address"
+          component={Address}
+          options={{ animation: "fade_from_bottom" }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -17,9 +17,7 @@ import ItemHeader from "./ItemHeader";
 const axios = require("axios").default;
 // import axios from "react-native-axios";
 
-export var ListOrderContext = createContext();
 export default function Product({ navigation }) {
-  const userId = "1";
   const [valueInput, setValueInput] = useState("");
   const [listBrand, setListBrand] = useState([
     "Tất cả",
@@ -30,7 +28,6 @@ export default function Product({ navigation }) {
   ]);
   const [listProduct, setListProduct] = useState([]);
   const [listProductShow, setListProductShow] = useState([]);
-  const [listCart, setListCart] = useState([]);
 
   const [chooseBrand, setChooseBrand] = useState("Tất cả");
   const [listProductSearch, setListProductSearch] = useState([]);
@@ -53,20 +50,6 @@ export default function Product({ navigation }) {
     setListProductShow(list);
   }, [chooseBrand]);
   useEffect(() => {
-    const getCarts = async () => {
-      try {
-        const response = await fetch(
-          "https://6375d6c2b5f0e1eb85fab4a2.mockapi.io/api/cart"
-        );
-        const json = await response.json();
-        setListCart(json);
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    getCarts();
-  }, []);
-  useEffect(() => {
     var list = [];
     listProduct.forEach((e) => {
       if (e.name.toLowerCase().includes(valueInput.toLowerCase())) {
@@ -79,21 +62,9 @@ export default function Product({ navigation }) {
     }
   }, [valueInput]);
 
-  const [myCart, setMyCart] = useState([]);
-  useEffect(() => {
-    listCart.forEach((e) => {
-      if (e.userId == userId) {
-        setMyCart(e.listProduct);
-      }
-    });
-  }, [listCart.length]);
-  ListOrderContext = createContext({ listOrder: myCart });
   return (
     <View style={styles.container}>
       <StatusBar />
-      <ListOrderContext.Provider
-        value={{ listOrder: myCart }}
-      ></ListOrderContext.Provider>
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => {

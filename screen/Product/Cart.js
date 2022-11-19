@@ -7,74 +7,95 @@ import {
   TextInput,
   Image,
   Animated,
+  Alert,
 } from "react-native";
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Ionicons, EvilIcons, AntDesign } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../color";
-import { useIsFocused } from "@react-navigation/native";
-import { ListOrderContext } from "./Product";
 import ReadMore from "react-native-read-more-text";
 import { Checkbox } from "react-native-paper";
 const axios = require("axios").default;
 
 export default function Cart({ navigation }) {
   const [listRender, setListRender] = useState([]);
-  const [hideDelete, setHideDelete] = useState(false);
-  var { listOrder } = useContext(ListOrderContext);
+  const [hideDelete, setHideDelete] = useState(true);
+  const [tempPrice, setTempPrice] = useState(0);
+  const [rerender, setRerender] = useState(false);
+  const id = 1;
   useEffect(() => {
-    setListRender(listOrder);
-    setHideDelete(true);
+    axios
+      .get("https://6375d6c2b5f0e1eb85fab4a2.mockapi.io/api/cart/" + id)
+      .then((todo) => setListRender(todo.data.listProduct));
   }, [rerender]);
 
   const [itemChoose, setItemChoose] = useState([]);
-  const isItemSelected = (item) => {
+  const [listItemSend, setListItemSend] = useState([]);
+  const isItemSelected = (id) => {
     // xem có id trong itemChoose không, trả về true false
-    return itemChoose.some((selectedItem) => selectedItem.id === item.id);
+    return itemChoose.some((idSelected) => idSelected === id);
   };
-  const onItemPress = (item) => {
-    if (isItemSelected(item)) {
+  const onItemPress = (id) => {
+    if (isItemSelected(id)) {
       // remove it from selected
       // Lấy những phần tử khác item.id trong mảng có sẵn
-      setItemChoose(
-        itemChoose.filter((selectedItem) => selectedItem.id !== item.id)
-      );
+      setItemChoose(itemChoose.filter((idSelected) => idSelected !== id));
     } else {
-      setItemChoose([...itemChoose, item]);
+      setItemChoose([...itemChoose, id]);
     }
   };
 
-  const [tempPrice, setTempPrice] = useState(0);
   useEffect(() => {
     var priceNow = 0;
-    itemChoose.forEach((e) => {
-      priceNow += e.amount * e.price;
+    var list = [];
+    setListItemSend([]);
+    listRender.forEach((e) => {
+      if (itemChoose.includes(e.id)) {
+        priceNow += e.amount * e.price;
+        list.push(e);
+      }
     });
+    setListItemSend(list);
     setTempPrice(priceNow);
-    console.log(itemChoose.length);
   }, [itemChoose.length, rerender]);
 
-  const [rerender, setRerender] = useState(false);
   const handleUpdate = async (id, listProduct) => {
     await axios
       .put("https://6375d6c2b5f0e1eb85fab4a2.mockapi.io/api/cart/" + id, {
         listProduct: listProduct,
       })
       .then(setRerender(!rerender));
-    setRerender(!rerender);
   };
   function add(index) {
     var amount = Number.parseInt(listRender[index].amount) + 1;
-    listOrder[index].amount = amount + "";
+    listRender[index].amount = amount;
     handleUpdate(1, listRender);
   }
   function sub(index) {
     var amountNow = Number.parseInt(listRender[index].amount);
     if (amountNow == 1) {
+      remove(index);
     } else {
       var amount = Number.parseInt(listRender[index].amount) - 1;
-      listOrder[index].amount = amount + "";
+      listRender[index].amount = amount;
       handleUpdate(1, listRender);
     }
+  }
+  function remove(index) {
+    Alert.alert("Thông báo", "Bạn có muốn xóa sản phẩm khỏi giỏ hàng?", [
+      {
+        text: "Hủy",
+        onPress: () => {},
+        style: "cancel",
+      },
+      {
+        text: "Có",
+        onPress: () => {
+          listRender.splice(index, 1);
+          handleUpdate(1, listRender);
+          setRerender(!rerender);
+        },
+      },
+    ]);
   }
   //-----------------------------
   return (
@@ -82,6 +103,7 @@ export default function Cart({ navigation }) {
       <View style={styles.header}>
         <TouchableOpacity
           onPress={() => {
+            setHideDelete(true);
             navigation.goBack();
           }}
         >
@@ -112,10 +134,10 @@ export default function Cart({ navigation }) {
             <View style={styles.subItems}>
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <Checkbox
-                  status={isItemSelected(item) ? "checked" : "unchecked"}
+                  status={isItemSelected(item.id) ? "checked" : "unchecked"}
                   color={colors.orangeMain}
                   onPress={() => {
-                    onItemPress(item);
+                    onItemPress(item.id);
                   }}
                 />
                 <Image
@@ -131,7 +153,6 @@ export default function Cart({ navigation }) {
                     <Text style={{ fontSize: 15 }}>{item.name}</Text>
                   </ReadMore>
                   <Text style={styles.priceProduct}>
-                    ${" "}
                     {item.price
                       .toFixed(0)
                       .replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.") + " đ"}
@@ -158,7 +179,12 @@ export default function Cart({ navigation }) {
               <View></View>
             </View>
             {hideDelete ? null : (
-              <TouchableOpacity style={styles.btnDelete}>
+              <TouchableOpacity
+                style={styles.btnDelete}
+                onPress={() => {
+                  remove(index);
+                }}
+              >
                 <Text style={styles.txtDelete}>Xóa</Text>
               </TouchableOpacity>
             )}
@@ -173,9 +199,26 @@ export default function Cart({ navigation }) {
               " đ"}
           </Text>
         </View>
-        <TouchableOpacity style={styles.btnOrder}>
-          <Text style={styles.txtOrder}>Tiến hành thanh toán</Text>
-        </TouchableOpacity>
+        {itemChoose.length > 0 ? (
+          <TouchableOpacity
+            style={styles.btnOrder}
+            onPress={() => {
+              setHideDelete(true);
+              navigation.navigate("ProcessingOrder", {
+                listItem: listItemSend,
+                tempPrice: tempPrice,
+              });
+            }}
+          >
+            <Text style={styles.txtOrder}>Tiến hành thanh toán</Text>
+          </TouchableOpacity>
+        ) : (
+          <View
+            style={[styles.btnOrder, { backgroundColor: colors.lightOrange }]}
+          >
+            <Text style={styles.txtOrder}>Tiến hành thanh toán</Text>
+          </View>
+        )}
       </View>
     </View>
   );
