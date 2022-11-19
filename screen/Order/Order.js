@@ -1,122 +1,39 @@
 import {
   View,
   Text,
-  StatusBar,
   StyleSheet,
-  TextInput,
   TouchableOpacity,
   FlatList,
-  ScrollView,
-  Dimensions,
 } from "react-native";
-import React, { useEffect, useState } from "react";
-import { Ionicons, EvilIcons, MaterialIcons } from "@expo/vector-icons";
+import React, { useContext, useEffect, useState } from "react";
 import { colors } from "../color";
-import ItemProduct from "../Product/ItemProduct";
-
+import { AuthContext } from "../Home";
 import { useNavigation } from "@react-navigation/native";
-
-const dataTemp = [
-  {
-    id: "id1",
-    diaChi: "217/11/3/4 Nguyễn Văn Bảo,Gò Vấp, TP.Hồ Chí Minh",
-    sdt: "0123456789",
-    ngayMua: "17/11/2022",
-    danhSachMua: [
-      { ten: "sp1fffffffffffffffffhgfsdfsdfsđsfdfffffffffffffffffffffff" },
-      { ten: "sp2" },
-      { ten: "sp3" },
-      { ten: "sp4" },
-    ],
-  },
-  {
-    id: "id2",
-    diaChi: "217/11/3/4 Nguyễn Văn Bảo,Gò Vấp,TP.Hồ Chí Minh",
-    sdt: "0123456789",
-    ngayMua: "17/11/2022",
-    danhSachMua: [
-      { ten: "sp1" },
-      { ten: "sp2" },
-      { ten: "sp3" },
-      { ten: "sp4" },
-    ],
-  },
-  {
-    id: "id3",
-    diaChi: "217/11/3/4 Nguyễn Văn Bảo,Gò Vấp,TP.Hồ Chí Minh",
-    sdt: "0123456789",
-    ngayMua: "17/11/2022",
-    danhSachMua: [
-      { ten: "sp1" },
-      { ten: "sp2" },
-      { ten: "sp3" },
-      { ten: "sp4" },
-    ],
-  },
-  {
-    id: "id4",
-    diaChi: "217/11/3/4 Nguyễn Văn Bảo,Gò Vấp,TP.Hồ Chí Minh",
-    sdt: "0123456789",
-    ngayMua: "17/11/2022",
-    danhSachMua: [
-      { ten: "sp1" },
-      { ten: "sp2" },
-      { ten: "sp3" },
-      { ten: "sp4" },
-    ],
-  },
-  {
-    id: "id5",
-    diaChi: "217/11/3/4 Nguyễn Văn Bảo,Gò Vấp,TP.Hồ Chí Minh",
-    sdt: "0123456789",
-    ngayMua: "17/11/2022",
-    danhSachMua: [
-      { ten: "sp1" },
-      { ten: "sp2" },
-      { ten: "sp3" },
-      { ten: "sp4" },
-    ],
-  },
-  {
-    id: "id6",
-    diaChi: "217/11/3/4 Nguyễn Văn Bảo,Gò Vấp,TP.Hồ Chí Minh",
-    sdt: "0123456789",
-    ngayMua: "17/11/2022",
-    danhSachMua: [
-      { ten: "sp1" },
-      { ten: "sp2" },
-      { ten: "sp3" },
-      { ten: "sp4" },
-    ],
-  },
-  {
-    id: "id7",
-    diaChi: "217/11/3/4 Nguyễn Văn Bảo,Gò Vấp,TP.Hồ Chí Minh",
-    sdt: "0123456789",
-    ngayMua: "17/11/2022",
-    danhSachMua: [
-      { ten: "sp1" },
-      { ten: "sp2" },
-      { ten: "sp3" },
-      { ten: "sp4" },
-    ],
-  },
-  {
-    id: "id8",
-    diaChi:
-      "217/11/3/4 Nguyễn Văn Bảo,GòVấpàgafdgadfgadfgfsdfsdfsgdbnjkfdbdjasdfghjkjhgfd fasdfas",
-    sdt: "0123456789",
-    ngayMua: "17/11/2022",
-    danhSachMua: [
-      { ten: "sp1", gia: "100" },
-      { ten: "sp2", gia: "100" },
-      { ten: "sp3", gia: "100" },
-      { ten: "sp4", gia: "100" },
-    ],
-  },
-];
+const axios = require("axios").default;
 
 export default function Order() {
+  const [listOrder, setListOrder] = useState("");
+  const [infoUser, setInfoUser] = useState("");
+  var { userId } = useContext(AuthContext);
+
+  useEffect(() => {
+    axios
+      .get(
+        "https://6375d6c2b5f0e1eb85fab4a2.mockapi.io/api/user/" +
+        userId +
+          "/order"
+      )
+      .then((todo) => setListOrder(todo.data));
+    axios
+      .get("https://6375d6c2b5f0e1eb85fab4a2.mockapi.io/api/user/" + userId)
+      .then((todo) => setInfoUser(todo.data));
+  }, []);
+
+  function currencyFormat(num) {
+    let numFormat = num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+    return numFormat;
+  }
+
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
@@ -125,35 +42,45 @@ export default function Order() {
       </View>
       <View style={styles.viewListOrder}>
         <FlatList
-          data={dataTemp}
+          data={listOrder}
           renderItem={({ item, index }) => {
             return (
               <View style={styles.itemOrder}>
                 <View style={styles.viewItemOrder}>
                   <Text style={styles.txtInfoItemOrder}>Ngày mua: </Text>
-                  <Text style={styles.infoItemOrder}>{item.ngayMua}</Text>
+                  <Text style={styles.infoItemOrder}>{item.createDate}</Text>
                 </View>
 
                 <View>
                   <Text style={styles.txtInfoItemOrder}>Sản phẩm đã mua: </Text>
+
                   <FlatList
-                    data={item.danhSachMua}
+                    data={item.products}
                     renderItem={({ item, index }) => {
                       return (
                         <View>
-                          <Text style={styles.infoItemOrder}>- {item.ten}</Text>
+                          <Text
+                            style={[styles.infoItemOrder, { lineHeight: 35 }]}
+                          >
+                            - {item.name}
+                          </Text>
                         </View>
                       );
                     }}
                   ></FlatList>
-                 
+                </View>
+                <View>
+                  <Text style={styles.infoItemOrder}>
+                    <Text style={styles.txtInfoItemOrder}>Tổng tiền:</Text>{" "}
+                    {currencyFormat(item.total)} vnđ
+                  </Text>
                 </View>
                 <View>
                   <Text style={styles.infoItemOrder}>
                     <Text style={styles.txtInfoItemOrder}>
                       Địa chỉ giao hàng:
                     </Text>{" "}
-                    {item.diaChi}
+                    {item.address}
                   </Text>
                 </View>
                 <View
@@ -162,21 +89,25 @@ export default function Order() {
                     justifyContent: "space-between",
                   }}
                 >
-                  <View>
+                  <View style={{ paddingBottom: 10 }}>
                     <View style={styles.viewItemOrder}>
                       <Text style={styles.txtInfoItemOrder}>
                         Số điện thoại:{" "}
                       </Text>
-                      <Text
-                        style={[styles.infoItemOrder, { paddingBottom: 20 }]}
-                      >
-                        {item.sdt}
-                      </Text>
+                      <Text style={[styles.infoItemOrder]}>{item.phone}</Text>
                     </View>
                   </View>
-                  <View style={styles.viewChiTiet}>
+                  <TouchableOpacity
+                    style={styles.viewChiTiet}
+                    onPress={() =>
+                      navigation.navigate("ChiTietHoaDon", {
+                        orderDetail: item,
+                        infoUser: infoUser,
+                      })
+                    }
+                  >
                     <Text style={styles.chiTiet}>Chi Tiết</Text>
-                  </View>
+                  </TouchableOpacity>
                 </View>
               </View>
             );
@@ -186,6 +117,21 @@ export default function Order() {
     </View>
   );
 }
+const renderTruncatedFooter = (handlePress) => {
+  return (
+    <Text style={{ color: "grey", fontSize: 17 }} onPress={handlePress}>
+      Đọc thêm
+    </Text>
+  );
+};
+const renderRevealedFooter = (handlePress) => {
+  return (
+    <Text style={{ color: "grey", fontSize: 17 }} onPress={handlePress}>
+      Ẩn bớt
+    </Text>
+  );
+};
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -209,14 +155,17 @@ const styles = StyleSheet.create({
   itemOrder: {
     backgroundColor: "rgb(229,229,229)",
     margin: 10,
-    paddingLeft: 10,
+    paddingLeft: 15,
     borderRadius: 20,
+    paddingTop: 10,
+    paddingRight: 10,
   },
   viewChiTiet: {
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: colors.orangeMain,
     borderTopLeftRadius: 15,
+    marginRight: -10,
   },
   chiTiet: {
     fontSize: 20,
@@ -229,8 +178,10 @@ const styles = StyleSheet.create({
   txtInfoItemOrder: {
     fontSize: 20,
     fontWeight: "bold",
+    lineHeight: 35,
   },
   infoItemOrder: {
     fontSize: 20,
+    lineHeight: 35,
   },
 });

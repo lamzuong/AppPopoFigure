@@ -71,7 +71,7 @@ export default function Register({ navigation }) {
     addNewUser();
     try {
       await createUserWithEmailAndPassword(auth, value.email, value.password);
-      navigation.navigate("Home");
+      navigation.navigate("Home",{ username: value.email });
     } catch (error) {
       console.log(error);
       setValue({
@@ -195,7 +195,7 @@ export default function Register({ navigation }) {
           flexDirection: "row",
         }}
         onPress={() => {
-          navigation.navigate("Login", { username: value.email });
+          navigation.navigate("Login");
         }}
       >
         <Text style={{ color: "grey" }}>Bạn đã có tài khoản? </Text>

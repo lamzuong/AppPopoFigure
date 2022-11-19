@@ -24,7 +24,7 @@ export default function Home({ route }) {
       .get("https://6375d6c2b5f0e1eb85fab4a2.mockapi.io/api/user")
       .then((todo) => setUser(todo.data.find((e) => e.username == username)));
   }, []);
-  console.log(user);
+  // console.log(user);
   AuthContext = createContext({ userId: user?.id });
   return (
     <>

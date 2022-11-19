@@ -10,6 +10,10 @@ import Cart from "./screen/Product/Cart";
 import ProductDetail from "./screen/Product/ProductDetail";
 import ProcessingOrder from "./screen/Product/ProcessingOrder";
 import Address from "./screen/Product/Address";
+import ChiTietHoaDon from "./screen/Order/ChiTietHoaDon";
+import Checkout from "./screen/Order/Checkout";
+import UpdateProfile from "./screen/Profile/UpdateProfile";
+
 // import { useAuthentication } from "./utils/hooks/useAuthenication";
 // import { auth } from "./firebase";
 // import "./firebase";
@@ -37,6 +41,9 @@ export default function App() {
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Register" component={Register} />
             <Stack.Screen name="Home" component={Home} />
+            <Stack.Screen name="ChiTietHoaDon" component={ChiTietHoaDon} />
+            <Stack.Screen name="Checkout" component={Checkout} />
+            <Stack.Screen name="UpdateProfile" component={UpdateProfile} />
             <Stack.Screen
               name="Cart"
               component={Cart}
