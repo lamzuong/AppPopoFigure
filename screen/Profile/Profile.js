@@ -53,18 +53,16 @@ export default function Profile() {
         </View>
       </View>
       <View style={styles.viewBottom}>
-        <View style={styles.viewGenderBirthday}>
-          <Text style={styles.genderBirthday}>Email: </Text>
-          <Text style={styles.infoGenderBirthday}>{infoUser.username}</Text>
+        
+          <View style={styles.viewGenderBirthday}>
+          <Text style={styles.genderBirthday}>Ngày sinh: </Text>
+          <Text style={styles.infoGenderBirthday}>{infoUser.birthday}</Text>
         </View>
         <View style={styles.viewGenderBirthday}>
           <Text style={styles.genderBirthday}>Giới tính: </Text>
           <Text style={styles.infoGenderBirthday}>{infoUser.gender}</Text>
         </View>
-        <View style={styles.viewGenderBirthday}>
-          <Text style={styles.genderBirthday}>Ngày sinh: </Text>
-          <Text style={styles.infoGenderBirthday}>{infoUser.birthday}</Text>
-        </View>
+      
         <TouchableOpacity
           style={styles.dangxuat}
           onPress={() => navigation.navigate("Welcome")}
@@ -103,7 +101,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   avatar: {
-    height: 230,
+    height: 210,
     justifyContent: "center",
     alignItems: "center",
     padding: 10,
@@ -135,6 +133,7 @@ const styles = StyleSheet.create({
   },
   infoGenderBirthday: {
     fontSize: 22,
+    width:245
   },
   viewlist: {
     padding: 5,
@@ -142,24 +141,26 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     borderRadius: 10,
   },
- 
+
   viewBottom: {
     borderRadius: 20,
     backgroundColor: "white",
     marginHorizontal: 10,
-    marginTop: 10,
+    marginTop: 20,
   },
   selection: {
     fontSize: 25,
     paddingLeft: 20,
     paddingTop: 4,
     color: "white",
+    
   },
   dangxuat: {
+    
     padding: 5,
     marginHorizontal: 20,
     borderRadius: 10,
-    marginTop: 20,
+    marginTop: 80,
     marginBottom: 20,
     justifyContent: "center",
     alignItems: "center",

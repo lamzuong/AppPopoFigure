@@ -21,6 +21,10 @@ export default function ProcessingOrder({ navigation, route }) {
     }
   });
 
+  function handleDatHang(){
+    
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -126,7 +130,7 @@ export default function ProcessingOrder({ navigation, route }) {
       {address == "" ? (
         <View
           style={[styles.btnOrder, { backgroundColor: colors.lightOrange }]}
-          onPress={() => {}}
+          onPress={() => {handleDatHang()}}
         >
           <Text style={styles.txtOrder}>Đặt hàng</Text>
         </View>
