@@ -14,6 +14,8 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 export default function ChiTietHoaDon() {
   const [orderDetail, setOrderDetail] = useState("");
   const [info, setInfo] = useState("");
+  
+  
   const [tongThanhTien, setTongThanhTien] = useState("");
   const navigation = useNavigation();
   const route = useRoute();
@@ -21,7 +23,6 @@ export default function ChiTietHoaDon() {
   useEffect(() => {
     setInfo(route.params.infoUser);
     setOrderDetail(route.params.orderDetail);
-
     let tongTemp = 0;
     route.params.orderDetail.products.forEach((e) => {
       tongTemp += e.price * e.amount;
@@ -50,7 +51,7 @@ export default function ChiTietHoaDon() {
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.info}>
             <Text style={styles.txtInfo}>Tên khách hàng: </Text>
-            {info.fullname}
+            {orderDetail.nameReceiver}
           </Text>
         </View>
 
@@ -86,7 +87,7 @@ export default function ChiTietHoaDon() {
                     resizeMode="contain"
                   ></Image>
                 </View>
-                <View style={{ flex: 0.72 }}>
+                <View style={{ flex: 0.72 ,marginLeft:5}}>
                   <View>
                     <Text style={styles.txtInfoProduct}>{item.name}</Text>
                   </View>
@@ -118,7 +119,7 @@ export default function ChiTietHoaDon() {
         <View style={styles.thanhToanTien}>
           <Text style={styles.txtTongTien}>Thành tiền:</Text>
           <Text style={styles.txtTongTien}>
-            {currencyFormat(tongThanhTien + 50000)} đ
+            {currencyFormat(tongThanhTien + 25000)} đ
           </Text>
         </View>
       </View>

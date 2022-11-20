@@ -132,7 +132,7 @@ export default function UpdateProfile() {
       setImageUpdate(result.assets[0]);
       setRender(!render);
     } else {
-      console.log("lỗi");
+      console.log("lỗi UpdateProfile");
     }
   };
   return (

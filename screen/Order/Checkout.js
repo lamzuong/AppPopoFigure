@@ -13,13 +13,13 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 
 export default function Checkout() {
   const [orderDetail, setOrderDetail] = useState("");
-  const [info, setInfo] = useState("");
+  const [nameReceiver, setNameReceiver] = useState("");
   const [tongThanhTien, setTongThanhTien] = useState("");
   const navigation = useNavigation();
   const route = useRoute();
 
   useEffect(() => {
-    setInfo(route.params.infoUser);
+    setNameReceiver(route.params.nameReceiver);
     setOrderDetail(route.params.orderDetail);
 
     let tongTemp = 0;
@@ -40,17 +40,15 @@ export default function Checkout() {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.navigate("Order")}>
-          <Ionicons name="arrow-back-outline" size={40} color="white" />
-        </TouchableOpacity>
-        <Text style={styles.txtCTHD}>Checkout</Text>
+        <Text></Text>
+        <Text style={styles.txtCTHD}>Hóa đơn</Text>
         <Text></Text>
       </View>
       <View style={styles.viewInfoUser}>
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.info}>
             <Text style={styles.txtInfo}>Tên khách hàng: </Text>
-            {info.fullname}
+            {nameReceiver}
           </Text>
         </View>
 
@@ -66,7 +64,7 @@ export default function Checkout() {
             {orderDetail.createDate}
           </Text>
         </View>
-        <View style={{ flexDirection: "row" }}>
+        <View style={{ flexDirection: "row",marginBottom:10 }}>
           <Text style={styles.info}>
             <Text style={styles.txtInfo}>Địa chỉ nhận hàng: </Text>
             {orderDetail.address}
@@ -86,7 +84,7 @@ export default function Checkout() {
                     resizeMode="contain"
                   ></Image>
                 </View>
-                <View style={{ flex: 0.72 }}>
+                <View style={{ flex: 0.72,marginLeft:5 }}>
                   <View>
                     <Text style={styles.txtInfoProduct}>{item.name}</Text>
                   </View>
@@ -118,13 +116,13 @@ export default function Checkout() {
         <View style={styles.thanhToanTien}>
           <Text style={styles.txtTongTien}>Thành tiền:</Text>
           <Text style={styles.txtTongTien}>
-            {currencyFormat(tongThanhTien + 50000)} đ
+            {currencyFormat(tongThanhTien + 25000)} đ
           </Text>
         </View>
       </View>
       <TouchableOpacity
         style={styles.dangxuat}
-        onPress={() => navigation.navigate("Product",{username:info.username})}
+        onPress={() => navigation.navigate("Product")}
       >
         <Text style={styles.selection}>Quay lại trang chủ</Text>
       </TouchableOpacity>
@@ -175,7 +173,7 @@ const styles = StyleSheet.create({
   },
   itemProduct: {
     paddingHorizontal: 20,
-    height: 240,
+    height: 230,
     backgroundColor: "white",
   },
   infoAmount: {

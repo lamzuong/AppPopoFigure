@@ -6,24 +6,95 @@ import {
   ScrollView,
   Image,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { colors } from "../color";
 import { Ionicons, Entypo, AntDesign } from "@expo/vector-icons";
 import ReadMore from "react-native-read-more-text";
+import { AuthContext } from "../Home";
 
+const axios = require("axios").default;
 export default function ProcessingOrder({ navigation, route }) {
-  const { listItem, tempPrice } = route.params;
+  const { listItem, tempPrice, ListItemInCartOfUser } = route.params;
   const transferFee = 25000;
   const [address, setAddress] = useState("");
+  var { userId } = useContext(AuthContext);
   useEffect(() => {
     if (route.params.address != null) {
       setAddress(route.params.address);
     }
   });
 
-  function handleDatHang(){
-    
+  function handleDatHang() {
+    let date = new Date();
+    let dateFormat =
+      date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+    //Thêm vào order
+
+    axios
+      .post(
+        "https://6375d6c2b5f0e1eb85fab4a2.mockapi.io/api/user/" +
+          userId +
+          "/order",
+        {
+          createDate: dateFormat,
+          products: listItem,
+          address: address.location,
+          nameReceiver: address.name,
+          phone: address.phone,
+          total: parseInt(tempPrice),
+        }
+      )
+      .then((todo) => {
+        let idThem = todo.data.id;
+        //Xóa khỏi cart
+        axios
+          .get("https://6375d6c2b5f0e1eb85fab4a2.mockapi.io/api/cart/" + userId)
+          .then((todo2) => {
+            let listCartTemp = todo2.data.listProduct;
+            let listProductFinal = [];
+            for (let index = 0; index < listCartTemp.length; index++) {
+              let element = listCartTemp[index];
+              if (!listItem.find((e) => e.id == element.id)) {
+                listProductFinal.push(element);
+              }
+            }
+            axios
+              .put(
+                "https://6375d6c2b5f0e1eb85fab4a2.mockapi.io/api/cart/" +
+                  userId,
+                {
+                  listProduct: listProductFinal,
+                }
+              )
+              .then(() => {
+                //Chuyển tới checkout
+                axios
+                  .get(
+                    "https://6375d6c2b5f0e1eb85fab4a2.mockapi.io/api/user/" +
+                      userId +
+                      "/order/" +
+                      idThem
+                  )
+                  .then((todo3) => {
+                    let orderDetail = todo3.data;
+                    navigation.navigate("Checkout", {
+                      orderDetail: orderDetail,
+                      nameReceiver: address.name,
+                    });
+                  });
+              })
+              .catch((errr) => console.log(errr));
+          });
+      })
+      .catch((er) => console.log(er));
   }
+  const handleUpdate = async (id, listProduct) => {
+    await axios
+      .put("https://6375d6c2b5f0e1eb85fab4a2.mockapi.io/api/cart/" + id, {
+        listProduct: listProduct,
+      })
+      .then(setRerender(!rerender));
+  };
 
   return (
     <View style={styles.container}>
@@ -130,12 +201,17 @@ export default function ProcessingOrder({ navigation, route }) {
       {address == "" ? (
         <View
           style={[styles.btnOrder, { backgroundColor: colors.lightOrange }]}
-          onPress={() => {handleDatHang()}}
+          onPress={() => {}}
         >
           <Text style={styles.txtOrder}>Đặt hàng</Text>
         </View>
       ) : (
-        <TouchableOpacity style={styles.btnOrder} onPress={() => {}}>
+        <TouchableOpacity
+          style={styles.btnOrder}
+          onPress={() => {
+            handleDatHang();
+          }}
+        >
           <Text style={styles.txtOrder}>Đặt hàng</Text>
         </TouchableOpacity>
       )}

@@ -8,14 +8,14 @@ import {
 import React, { useContext, useEffect, useState } from "react";
 import { colors } from "../color";
 import { AuthContext } from "../Home";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 const axios = require("axios").default;
 
 export default function Order() {
   const [listOrder, setListOrder] = useState("");
   const [infoUser, setInfoUser] = useState("");
   var { userId } = useContext(AuthContext);
-
+  const isFocused = useIsFocused();
   useEffect(() => {
     axios
       .get(
@@ -28,6 +28,20 @@ export default function Order() {
       .get("https://6375d6c2b5f0e1eb85fab4a2.mockapi.io/api/user/" + userId)
       .then((todo) => setInfoUser(todo.data));
   }, []);
+
+  useEffect(() => {
+    //Update  state you want to be updated
+    axios
+      .get(
+        "https://6375d6c2b5f0e1eb85fab4a2.mockapi.io/api/user/" +
+          userId +
+          "/order"
+      )
+      .then((todo) => setListOrder(todo.data));
+    axios
+      .get("https://6375d6c2b5f0e1eb85fab4a2.mockapi.io/api/user/" + userId)
+      .then((todo) => setInfoUser(todo.data));
+  }, [isFocused]);
 
   function currencyFormat(num) {
     let numFormat = num.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
