@@ -46,6 +46,7 @@ export default function UpdateProfile() {
     setGender(route.params.gender);
     setbirthday(route.params.birthday);
     setImageUser(route.params.avatar);
+
     setImageUpdate(route.params.avatar);
   }, []);
 
@@ -70,8 +71,13 @@ export default function UpdateProfile() {
       Alert.alert("Vui lòng nhập đầy đủ thông tin");
       return;
     }
-    let imageBase64 = `data:image/jpeg;base64,${imageUpdate.base64}`;
-    console.log("startUpdate");
+
+    let imageBase64 = "";
+    if (typeof imageUpdate == "string") {
+      imageBase64 = imageUpdate;
+    } else {
+      imageBase64 = `data:image/jpeg;base64,${imageUpdate.base64}`;
+    }
     axios
       .put(
         "https://6375d6c2b5f0e1eb85fab4a2.mockapi.io/api/user/" + infoUser.id,
@@ -84,7 +90,7 @@ export default function UpdateProfile() {
       )
       .then(() => {
         setRender(!render);
-        console.log("EndUpdate");
+
         navigation.navigate("Profile");
       })
       .catch((err) => {
