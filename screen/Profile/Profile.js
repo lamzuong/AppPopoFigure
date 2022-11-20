@@ -91,8 +91,9 @@ const styles = StyleSheet.create({
   },
 
   profile: {
-    fontSize: 25,
     color: "white",
+    fontWeight: "bold",
+    fontSize: 20,
   },
   viewAvatarAndName: {
     borderRadius: 20,
@@ -149,9 +150,10 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   selection: {
-    fontSize: 25,
+    fontSize: 18,
+    fontWeight: "bold",
     paddingLeft: 20,
-    paddingTop: 4,
+    paddingVertical: 7,
     color: "white",
     
   },

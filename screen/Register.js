@@ -71,7 +71,7 @@ export default function Register({ navigation }) {
     addNewUser();
     try {
       await createUserWithEmailAndPassword(auth, value.email, value.password);
-      navigation.navigate("Home",{ username: value.email });
+      navigation.navigate("Home", { username: value.email });
     } catch (error) {
       console.log(error);
       setValue({
@@ -144,6 +144,7 @@ export default function Register({ navigation }) {
             onChangeText={(text) => {
               setbirthday(text);
             }}
+            style={{ color: "black" }}
           />
           <TouchableOpacity
             style={{ marginTop: 2, marginLeft: 30 }}

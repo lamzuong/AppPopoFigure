@@ -20,7 +20,7 @@ export default function Order() {
     axios
       .get(
         "https://6375d6c2b5f0e1eb85fab4a2.mockapi.io/api/user/" +
-        userId +
+          userId +
           "/order"
       )
       .then((todo) => setListOrder(todo.data));
@@ -146,8 +146,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   txtDSHD: {
-    fontSize: 30,
     color: "white",
+    fontWeight: "bold",
+    fontSize: 20,
   },
   viewListOrder: {
     height: 550,
