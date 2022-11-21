@@ -8,6 +8,7 @@ import {
   Touchable,
   TouchableOpacity,
   StatusBar,
+  Alert,
 } from "react-native";
 import { colors } from "./color";
 import { AntDesign } from "@expo/vector-icons";
@@ -21,14 +22,35 @@ export default function Login({ navigation }) {
     password: "",
     error: "",
   });
+  const [errorEmail, setErrorEmail] = useState(false);
+  const [errorPassLength, setErrorPassLength] = useState(false);
 
   async function signIn() {
-    console.log("Login");
-    if (value.email === "" || value.password === "") {
-      setValue({
-        ...value,
-        error: "Vui lòng nhập email và password!",
-      });
+    if (errorEmail || errorPassLength) {
+      Alert.alert("Lỗi", "Vui lòng nhập lại thông tin.", [
+        {
+          text: "Xác Nhận",
+          style: "cancel",
+        },
+      ]);
+      return;
+    }
+    if (value.email === "") {
+      Alert.alert("Lỗi", "Vui lòng nhập email.", [
+        {
+          text: "Xác Nhận",
+          style: "cancel",
+        },
+      ]);
+      return;
+    }
+    if (value.password === "") {
+      Alert.alert("Lỗi", "Vui lòng nhập password.", [
+        {
+          text: "Xác Nhận",
+          style: "cancel",
+        },
+      ]);
       return;
     }
 
@@ -36,13 +58,52 @@ export default function Login({ navigation }) {
       await signInWithEmailAndPassword(auth, value.email, value.password);
       navigation.navigate("Home", { username: value.email });
     } catch (error) {
-      console.log(error);
-      setValue({
-        ...value,
-        error: error.message,
-      });
+      Alert.alert("Lỗi", "Đăng nhập thất bại.", [
+        {
+          text: "Xác nhận",
+          style: "cancel",
+        },
+      ]);
     }
   }
+  const checkEmail = () => {
+    if (
+      !/^[a-zA-Z0-9.!#$%&'*+\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(
+        value.email
+      )
+    ) {
+      setErrorEmail(true);
+      return;
+    }
+    setErrorEmail(false);
+  };
+  const checkPassLength = () => {
+    if (value.password.length < 6) {
+      setErrorPassLength(true);
+      return;
+    }
+    setErrorPassLength(false);
+  };
+  // _signIn = async () => {
+  //   try {
+  //     await GoogleSignin.hasPlayServices();
+  //     const { accessToken, idToken } = await GoogleSignin.signIn();
+  //     setloggedIn(true);
+  //   } catch (error) {
+  //     if (error.code === statusCodes.SIGN_IN_CANCELLED) {
+  //       // user cancelled the login flow
+  //       alert("Cancel");
+  //     } else if (error.code === statusCodes.IN_PROGRESS) {
+  //       alert("Signin in progress");
+  //       // operation (f.e. sign in) is in progress already
+  //     } else if (error.code === statusCodes.PLAY_SERVICES_NOT_AVAILABLE) {
+  //       alert("PLAY_SERVICES_NOT_AVAILABLE");
+  //       // play services not available or outdated
+  //     } else {
+  //       // some other error happened
+  //     }
+  //   }
+  // };
   return (
     <View style={styles.root}>
       <StatusBar />
@@ -57,84 +118,102 @@ export default function Login({ navigation }) {
           marginTop: 10,
         }}
       />
-      <View style={[styles.input, { marginTop: 50 }]}>
-        <TextInput
-          value={value.email}
-          onChangeText={(text) => setValue({ ...value, email: text })}
-          placeholder="Email"
-          style={styles.input}
-        />
-      </View>
-      <View style={styles.input}>
-        <TextInput
-          value={value.password}
-          onChangeText={(text) => setValue({ ...value, password: text })}
-          placeholder="Password"
-          style={styles.input}
-          secureTextEntry={true}
-        />
-      </View>
-      <TouchableOpacity style={styles.container} onPress={signIn}>
-        <Text style={styles.text}>Đăng Nhập</Text>
-      </TouchableOpacity>
-      {!!value.error && (
-        <View style={styles.error}>
-          <Text style={{ color: "red", fontWeight: "bold" }}>
-            {value.error}
-          </Text>
+      <ScrollView style={{ width: "100%" }}>
+        <View style={[styles.input, { marginTop: 10 }]}>
+          <TextInput
+            value={value.email}
+            onChangeText={(text) => setValue({ ...value, email: text })}
+            placeholder="Email"
+            style={styles.input}
+            onBlur={checkEmail}
+          />
         </View>
-      )}
-      <TouchableOpacity
-        style={{
-          flexDirection: "column",
-          alignItems: "center",
-          marginTop: 10,
-          flexDirection: "row",
-        }}
-        onPress={() => {
-          navigation.navigate("Register");
-        }}
-      >
-        <Text style={{ color: "grey" }}>Bạn chưa có tài khoản? </Text>
-        <Text
+        {errorEmail && (
+          <View style={[styles.error, { marginTop: 0 }]}>
+            <Text style={{ color: "red", fontWeight: "bold" }}>
+              Email không hợp lệ, vui lòng nhập lại.
+            </Text>
+          </View>
+        )}
+        <View style={styles.input}>
+          <TextInput
+            value={value.password}
+            onChangeText={(text) => setValue({ ...value, password: text })}
+            placeholder="Password"
+            style={styles.input}
+            secureTextEntry={true}
+            onBlur={checkPassLength}
+          />
+        </View>
+        {errorPassLength && (
+          <View style={[styles.error, { marginTop: 0 }]}>
+            <Text style={{ color: "red", fontWeight: "bold" }}>
+              Password phải có ít nhất 6 ký tự.
+            </Text>
+          </View>
+        )}
+        <TouchableOpacity style={styles.container} onPress={signIn}>
+          <Text style={styles.text}>Đăng Nhập</Text>
+        </TouchableOpacity>
+        {/* {!!value.error && (
+          <View style={styles.error}>
+            <Text style={{ color: "red", fontWeight: "bold" }}>
+              {value.error}
+            </Text>
+          </View>
+        )} */}
+        <TouchableOpacity
           style={{
-            color: colors.orangeMain,
-            textDecorationLine: "underline",
-            fontWeight: "bold",
+            flexDirection: "column",
+            justifyContent: "center",
+            marginTop: 10,
+            flexDirection: "row",
+          }}
+          onPress={() => {
+            navigation.navigate("Register");
           }}
         >
-          Đăng Ký
-        </Text>
-      </TouchableOpacity>
-      {/* <TouchableOpacity
-        style={[
-          styles.container,
-          { backgroundColor: "white", borderWidth: 0.5, marginTop: 40 },
-        ]}
-      >
-        <Image
-          source={{
-            uri: "https://cdn-icons-png.flaticon.com/512/2991/2991148.png",
-          }}
-          style={styles.icon}
-        ></Image>
-        <Text style={[styles.text, { color: "black" }]}>
-          Đăng Nhập bằng Google
-        </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={[styles.container, { backgroundColor: "#2b5990" }]}
-      >
-        <Image
-          source={{
-            uri: "https://seeklogo.com/images/F/facebook-icon-circle-logo-09F32F61FF-seeklogo.com.png",
-          }}
-          style={[styles.icon, { marginRight: 0 }]}
-        ></Image>
-        <Text style={[styles.text, { marginLeft: 15 }]}>
-          Đăng Nhập bằng Facebook
-        </Text>
-      </TouchableOpacity> */}
+          <Text style={{ color: "grey" }}>Bạn chưa có tài khoản? </Text>
+          <Text
+            style={{
+              color: colors.orangeMain,
+              textDecorationLine: "underline",
+              fontWeight: "bold",
+            }}
+          >
+            Đăng Ký
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[
+            styles.container,
+            { backgroundColor: "white", borderWidth: 0.5, marginTop: 40 },
+          ]}
+        >
+          <Image
+            source={{
+              uri: "https://cdn-icons-png.flaticon.com/512/2991/2991148.png",
+            }}
+            style={styles.icon}
+          ></Image>
+          <Text style={[styles.text, { color: "black" }]}>
+            Đăng Nhập Bằng Google
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.container, { backgroundColor: "#2b5990" }]}
+        >
+          <Image
+            source={{
+              uri: "https://seeklogo.com/images/F/facebook-icon-circle-logo-09F32F61FF-seeklogo.com.png",
+            }}
+            style={[styles.icon, { marginRight: 0 }]}
+          ></Image>
+          <Text style={[styles.text, { marginLeft: 15 }]}>
+            Đăng Nhập Bằng Facebook
+          </Text>
+        </TouchableOpacity>
+      </ScrollView>
     </View>
   );
 }
