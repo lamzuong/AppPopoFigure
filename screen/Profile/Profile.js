@@ -53,8 +53,7 @@ export default function Profile() {
         </View>
       </View>
       <View style={styles.viewBottom}>
-        
-          <View style={styles.viewGenderBirthday}>
+        <View style={styles.viewGenderBirthday}>
           <Text style={styles.genderBirthday}>Ngày sinh: </Text>
           <Text style={styles.infoGenderBirthday}>{infoUser.birthday}</Text>
         </View>
@@ -62,7 +61,7 @@ export default function Profile() {
           <Text style={styles.genderBirthday}>Giới tính: </Text>
           <Text style={styles.infoGenderBirthday}>{infoUser.gender}</Text>
         </View>
-      
+
         <TouchableOpacity
           style={styles.dangxuat}
           onPress={() => navigation.navigate("Welcome")}
@@ -100,6 +99,7 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     marginHorizontal: 10,
     marginTop: 10,
+    paddingTop: 10,
   },
   avatar: {
     height: 210,
@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
   },
   infoGenderBirthday: {
     fontSize: 22,
-    width:245
+    width: 245,
   },
   viewlist: {
     padding: 5,
@@ -155,14 +155,12 @@ const styles = StyleSheet.create({
     paddingLeft: 20,
     paddingVertical: 7,
     color: "white",
-    
   },
   dangxuat: {
-    
     padding: 5,
     marginHorizontal: 20,
     borderRadius: 10,
-    marginTop: 80,
+    marginTop: 60,
     marginBottom: 20,
     justifyContent: "center",
     alignItems: "center",

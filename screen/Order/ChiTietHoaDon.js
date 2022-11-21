@@ -14,8 +14,7 @@ import { useNavigation, useRoute } from "@react-navigation/native";
 export default function ChiTietHoaDon() {
   const [orderDetail, setOrderDetail] = useState("");
   const [info, setInfo] = useState("");
-  
-  
+
   const [tongThanhTien, setTongThanhTien] = useState("");
   const navigation = useNavigation();
   const route = useRoute();
@@ -45,7 +44,7 @@ export default function ChiTietHoaDon() {
           <Ionicons name="arrow-back-outline" size={40} color="white" />
         </TouchableOpacity>
         <Text style={styles.txtCTHD}>Hóa đơn</Text>
-        <Text></Text>
+        <View style={{ width: 30 }}></View>
       </View>
       <View style={styles.viewInfoUser}>
         <View style={{ flexDirection: "row" }}>
@@ -87,7 +86,7 @@ export default function ChiTietHoaDon() {
                     resizeMode="contain"
                   ></Image>
                 </View>
-                <View style={{ flex: 0.72 ,marginLeft:5}}>
+                <View style={{ flex: 0.72, marginLeft: 5 }}>
                   <View>
                     <Text style={styles.txtInfoProduct}>{item.name}</Text>
                   </View>
@@ -142,8 +141,9 @@ const styles = StyleSheet.create({
   },
 
   txtCTHD: {
-    fontSize: 30,
     color: "white",
+    fontWeight: "bold",
+    fontSize: 20,
   },
   viewInfoUser: {
     paddingHorizontal: 20,

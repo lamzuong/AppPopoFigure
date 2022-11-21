@@ -64,7 +64,7 @@ export default function Checkout() {
             {orderDetail.createDate}
           </Text>
         </View>
-        <View style={{ flexDirection: "row",marginBottom:10 }}>
+        <View style={{ flexDirection: "row", marginBottom: 10 }}>
           <Text style={styles.info}>
             <Text style={styles.txtInfo}>Địa chỉ nhận hàng: </Text>
             {orderDetail.address}
@@ -84,7 +84,7 @@ export default function Checkout() {
                     resizeMode="contain"
                   ></Image>
                 </View>
-                <View style={{ flex: 0.72,marginLeft:5 }}>
+                <View style={{ flex: 0.72, marginLeft: 5 }}>
                   <View>
                     <Text style={styles.txtInfoProduct}>{item.name}</Text>
                   </View>
@@ -145,8 +145,9 @@ const styles = StyleSheet.create({
   },
 
   txtCTHD: {
-    fontSize: 30,
     color: "white",
+    fontWeight: "bold",
+    fontSize: 20,
   },
   viewInfoUser: {
     paddingHorizontal: 20,
@@ -210,7 +211,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 20,
     borderRadius: 10,
     marginBottom: 20,
-    marginTop:10,
+    marginTop: 10,
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: colors.orangeMain,

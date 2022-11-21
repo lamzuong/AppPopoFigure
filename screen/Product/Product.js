@@ -66,13 +66,6 @@ export default function Product({ navigation }) {
     <View style={styles.container}>
       <StatusBar />
       <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => {
-            navigation.goBack();
-          }}
-        >
-          <Ionicons name="arrow-back-outline" size={40} color="white" />
-        </TouchableOpacity>
         <View style={styles.txtSearch}>
           <EvilIcons name="search" size={28} color="black" />
           <View style={{ marginHorizontal: 2 }}></View>
@@ -176,12 +169,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     backgroundColor: colors.orangeMain,
     alignItems: "center",
-    paddingHorizontal: 10,
+    paddingHorizontal: 20,
     justifyContent: "space-between",
   },
   txtSearch: {
     height: 40,
-    width: "70%",
+    width: "85%",
     borderRadius: 10,
     backgroundColor: "white",
     paddingHorizontal: 10,
