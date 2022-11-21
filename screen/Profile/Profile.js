@@ -54,6 +54,10 @@ export default function Profile() {
       </View>
       <View style={styles.viewBottom}>
         <View style={styles.viewGenderBirthday}>
+          <Text style={styles.genderBirthday}>SDT: </Text>
+          <Text style={styles.infoGenderBirthday}>{infoUser.sdt}</Text>
+        </View>
+        <View style={styles.viewGenderBirthday}>
           <Text style={styles.genderBirthday}>Ngày sinh: </Text>
           <Text style={styles.infoGenderBirthday}>{infoUser.birthday}</Text>
         </View>

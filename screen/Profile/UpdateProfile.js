@@ -32,6 +32,7 @@ export default function UpdateProfile() {
   const [birthday, setbirthday] = useState("");
   const [gender, setGender] = useState("Nam");
   const [ten, setTen] = useState("");
+  const [sdt, setSdt] = useState("");
   const [icon, seticon] = useState("calendar");
   const [imageUpdate, setImageUpdate] = useState(img);
   const [render, setRender] = useState(false);
@@ -67,8 +68,28 @@ export default function UpdateProfile() {
   };
 
   function updateProfileUser() {
-    if (!birthday.trim() || !ten.trim()) {
+    if (!birthday.trim() || !ten.trim() || !sdt.trim()) {
       Alert.alert("Vui lòng nhập đầy đủ thông tin");
+      return;
+    }
+
+    if (!/^[a-zA-Z]+$/.test(ten)) {
+      Alert.alert("Lỗi", "Tên chỉ chứa ký tự chữ, vui lòng nhập lại.", [
+        {
+          text: "Xác Nhận",
+          style: "cancel",
+        },
+      ]);
+      return;
+    }
+
+    if (!/^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/.test(sdt)) {
+      Alert.alert("Lỗi", "Số điện thoại không hợp lệ, vui lòng nhập lại.", [
+        {
+          text: "Xác Nhận",
+          style: "cancel",
+        },
+      ]);
       return;
     }
 
@@ -86,6 +107,7 @@ export default function UpdateProfile() {
           gender: gender,
           avatar: imageBase64,
           birthday: birthday,
+          sdt: sdt,
         }
       )
       .then(() => {
@@ -213,65 +235,77 @@ export default function UpdateProfile() {
           </TouchableOpacity>
         </View>
       </View>
-      <View style={[styles.input]}>
-        <TextInput
-          value={ten}
-          onChangeText={(text) => setTen(text)}
-          placeholder="Nhập Tên"
-          style={[styles.input4]}
-        />
-      </View>
-
-      <TouchableOpacity style={[styles.input, { flexDirection: "row" }]}>
-        <View style={[styles.input3]}>
+      <ScrollView>
+        <View style={[styles.input]}>
           <TextInput
-            value={birthday}
-            placeholderTextColor="gray"
-            placeholder="Chọn ngày sinh"
-            editable={false}
-            style={{ color: "black", fontSize: 20 }}
-          />
-          <TouchableOpacity
-            style={{ marginTop: 2, marginLeft: 30 }}
-            onPress={() => {
-              if (icon === "close") {
-                setbirthday("");
-                seticon("calendar");
-              } else {
-                showDatePicker();
-              }
-            }}
-          >
-            <Ionicons name={icon} size={24} color="black" />
-          </TouchableOpacity>
-        </View>
-      </TouchableOpacity>
-      <View style={styles.input}>
-        <View style={styles.input2}>
-          <Text style={[styles.gender, { marginRight: 20 }]}>Giới tính: </Text>
-
-          <Text style={styles.gender}>Nam</Text>
-          <RadioButton
-            value="Nam"
-            status={gender === "Nam" ? "checked" : "unchecked"}
-            onPress={() => setGender("Nam")}
-          />
-          <Text style={[styles.gender, { marginLeft: 30 }]}>Nữ</Text>
-          <RadioButton
-            style={{}}
-            value="Nữ"
-            status={gender === "Nữ" ? "checked" : "unchecked"}
-            onPress={() => setGender("Nữ")}
+            value={ten}
+            onChangeText={(text) => setTen(text)}
+            placeholder="Nhập Tên"
+            style={[styles.input4]}
           />
         </View>
-      </View>
+        <View style={[styles.input]}>
+          <TextInput
+            value={sdt}
+            onChangeText={(text) => setSdt(text)}
+            placeholder="Nhập SDT"
+            style={[styles.input4]}
+          />
+        </View>
 
-      <TouchableOpacity
-        style={styles.container}
-        onPress={() => updateProfileUser()}
-      >
-        <Text style={styles.text}>Cập nhật thông tin</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={[styles.input, { flexDirection: "row" }]}>
+          <View style={[styles.input3]}>
+            <TextInput
+              value={birthday}
+              placeholderTextColor="gray"
+              placeholder="Chọn ngày sinh"
+              editable={false}
+              style={{ color: "black", fontSize: 20 }}
+            />
+            <TouchableOpacity
+              style={{ marginTop: 2, marginLeft: 30 }}
+              onPress={() => {
+                if (icon === "close") {
+                  setbirthday("");
+                  seticon("calendar");
+                } else {
+                  showDatePicker();
+                }
+              }}
+            >
+              <Ionicons name={icon} size={24} color="black" />
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+        <View style={styles.input}>
+          <View style={styles.input2}>
+            <Text style={[styles.gender, { marginRight: 20 }]}>
+              Giới tính:{" "}
+            </Text>
+
+            <Text style={styles.gender}>Nam</Text>
+            <RadioButton
+              value="Nam"
+              status={gender === "Nam" ? "checked" : "unchecked"}
+              onPress={() => setGender("Nam")}
+            />
+            <Text style={[styles.gender, { marginLeft: 30 }]}>Nữ</Text>
+            <RadioButton
+              style={{}}
+              value="Nữ"
+              status={gender === "Nữ" ? "checked" : "unchecked"}
+              onPress={() => setGender("Nữ")}
+            />
+          </View>
+        </View>
+
+        <TouchableOpacity
+          style={styles.container}
+          onPress={() => updateProfileUser()}
+        >
+          <Text style={styles.text}>Cập nhật thông tin</Text>
+        </TouchableOpacity>
+      </ScrollView>
 
       <View>
         <DateTimePickerModal
