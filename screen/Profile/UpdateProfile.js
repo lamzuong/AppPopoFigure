@@ -32,7 +32,7 @@ export default function UpdateProfile() {
   const [birthday, setbirthday] = useState("");
   const [gender, setGender] = useState("Nam");
   const [ten, setTen] = useState("");
-  const [sdt, setSdt] = useState("");
+  // const [sdt, setSdt] = useState("");
   const [icon, seticon] = useState("calendar");
   const [imageUpdate, setImageUpdate] = useState(img);
   const [render, setRender] = useState(false);
@@ -68,7 +68,7 @@ export default function UpdateProfile() {
   };
 
   function updateProfileUser() {
-    if (!birthday.trim() || !ten.trim() || !sdt.trim()) {
+    if (!birthday.trim() || !ten.trim() ) {
       Alert.alert("Vui lòng nhập đầy đủ thông tin");
       return;
     }
@@ -83,15 +83,15 @@ export default function UpdateProfile() {
       return;
     }
 
-    if (!/^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/.test(sdt)) {
-      Alert.alert("Lỗi", "Số điện thoại không hợp lệ, vui lòng nhập lại.", [
-        {
-          text: "Xác Nhận",
-          style: "cancel",
-        },
-      ]);
-      return;
-    }
+    // if (!/^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/.test(sdt)) {
+    //   Alert.alert("Lỗi", "Số điện thoại không hợp lệ, vui lòng nhập lại.", [
+    //     {
+    //       text: "Xác Nhận",
+    //       style: "cancel",
+    //     },
+    //   ]);
+    //   return;
+    // }
 
     let imageBase64 = "";
     if (typeof imageUpdate == "string") {
@@ -107,7 +107,7 @@ export default function UpdateProfile() {
           gender: gender,
           avatar: imageBase64,
           birthday: birthday,
-          sdt: sdt,
+          // sdt: sdt,
         }
       )
       .then(() => {
@@ -244,14 +244,14 @@ export default function UpdateProfile() {
             style={[styles.input4]}
           />
         </View>
-        <View style={[styles.input]}>
+        {/* <View style={[styles.input]}>
           <TextInput
             value={sdt}
             onChangeText={(text) => setSdt(text)}
             placeholder="Nhập SDT"
             style={[styles.input4]}
           />
-        </View>
+        </View> */}
 
         <TouchableOpacity style={[styles.input, { flexDirection: "row" }]}>
           <View style={[styles.input3]}>
