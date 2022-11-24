@@ -132,7 +132,7 @@ export default function Register({ navigation }) {
           },
         ]
       );
-      navigation.navigate("Home", { username: value.email });
+      // navigation.navigate("Home", { username: value.email });
     } catch (error) {
       Alert.alert("Lỗi", "Email đã tồn tại, vui lòng nhập email khác.", [
         {
