@@ -151,7 +151,7 @@ export default function Register({ navigation }) {
   };
 
   const checkName = () => {
-    if (!/^[a-zA-Z]+$/.test(value.name)) {
+    if (!/^[A-Za-z\s]*$/.test(value.name)) {
       setErrorName(true);
       return;
     }
