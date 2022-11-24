@@ -13,7 +13,11 @@ import {
 } from "react-native";
 import { colors } from "./color";
 import { AntDesign } from "@expo/vector-icons";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+} from "firebase/auth";
 import { auth } from "../firebase";
 import React, { useState } from "react";
 import { RadioButton } from "react-native-paper";
@@ -55,13 +59,7 @@ export default function Register({ navigation }) {
   };
 
   async function signUp() {
-    if (
-      errorName ||
-      errorSdt ||
-      errorEmail ||
-      errorPassLength ||
-      errorPassConfirm
-    ) {
+    if (errorName || errorEmail || errorPassLength || errorPassConfirm) {
       Alert.alert("Lỗi", "Vui lòng nhập lại thông tin.", [
         {
           text: "Xác Nhận",
@@ -123,9 +121,44 @@ export default function Register({ navigation }) {
     addNewUser();
     try {
       await createUserWithEmailAndPassword(auth, value.email, value.password);
+      await sendEmailVerification(auth.currentUser);
+      Alert.alert(
+        "Xác Thực",
+        "Đã gửi link xác thực đến email, vui lòng xác nhận trước khi đăng nhập.",
+        [
+          {
+            text: "Xác nhận",
+            style: "cancel",
+          },
+        ]
+      );
       navigation.navigate("Home", { username: value.email });
     } catch (error) {
       Alert.alert("Lỗi", "Email đã tồn tại, vui lòng nhập email khác.", [
+        {
+          text: "Xác nhận",
+          style: "cancel",
+        },
+      ]);
+    }
+  }
+
+  async function confirmEmail() {
+    //sendEmailVerification
+    console.log(auth.currentUser);
+    await auth.currentUser.reload();
+    {
+    }
+    if (auth.currentUser.emailVerified) {
+      Alert.alert("Thành Công", "Xác thực email thành công", [
+        {
+          text: "Xác nhận",
+          style: "cancel",
+        },
+      ]);
+      navigation.navigate("Home", { username: value.email });
+    } else {
+      Alert.alert("Lỗi", "Vui lòng xác thực email trước khi đăng nhập", [
         {
           text: "Xác nhận",
           style: "cancel",
@@ -336,6 +369,9 @@ export default function Register({ navigation }) {
         )}
         <TouchableOpacity style={styles.container} onPress={signUp}>
           <Text style={styles.text}>Đăng Ký</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.container} onPress={confirmEmail}>
+          <Text style={styles.text}>Đăng Nhập</Text>
         </TouchableOpacity>
         {/* {!!value.error && (
           <View style={styles.error}>

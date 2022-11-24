@@ -13,6 +13,7 @@ import Address from "./screen/Product/Address";
 import ChiTietHoaDon from "./screen/Order/ChiTietHoaDon";
 import Checkout from "./screen/Order/Checkout";
 import UpdateProfile from "./screen/Profile/UpdateProfile";
+// import ConfirmEmail from "./screen/ConfirmEmail";
 
 // import { useAuthentication } from "./utils/hooks/useAuthenication";
 // import { auth } from "./firebase";
@@ -40,6 +41,7 @@ export default function App() {
             <Stack.Screen name="Welcome" component={Welcome} />
             <Stack.Screen name="Login" component={Login} />
             <Stack.Screen name="Register" component={Register} />
+            {/* <Stack.Screen name="Register" component={ConfirmEmail} /> */}
             <Stack.Screen name="Home" component={Home} />
             <Stack.Screen name="ChiTietHoaDon" component={ChiTietHoaDon} />
             <Stack.Screen name="Checkout" component={Checkout} />
