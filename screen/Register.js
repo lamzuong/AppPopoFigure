@@ -30,11 +30,10 @@ export default function Register({ navigation }) {
     password: "",
     error: "",
     name: "",
-    sdt: "",
+    // sdt: "",
   });
   const [icon, seticon] = useState("calendar");
   const [errorName, setErrorName] = useState(false);
-  const [errorSdt, setErrorSdt] = useState(false);
   const [errorEmail, setErrorEmail] = useState(false);
   const [errorPassLength, setErrorPassLength] = useState(false);
   const [passConfirm, setPassConfirm] = useState("");
@@ -46,7 +45,6 @@ export default function Register({ navigation }) {
       fullname: value.name,
       gender: gender,
       birthday: birthday,
-      sdt: value.sdt,
       avatar:
         "https://i.pinimg.com/736x/7e/92/df/7e92df16f7bd582a25ac3f0146ba2b6c.jpg",
     });
@@ -81,15 +79,15 @@ export default function Register({ navigation }) {
       ]);
       return;
     }
-    if (value.sdt === "") {
-      Alert.alert("Lỗi", "Vui lòng nhập số điện thoại.", [
-        {
-          text: "Xác Nhận",
-          style: "cancel",
-        },
-      ]);
-      return;
-    }
+    // if (value.sdt === "") {
+    //   Alert.alert("Lỗi", "Vui lòng nhập số điện thoại.", [
+    //     {
+    //       text: "Xác Nhận",
+    //       style: "cancel",
+    //     },
+    //   ]);
+    //   return;
+    // }
     if (birthday === "") {
       Alert.alert("Lỗi", "Vui lòng nhập ngày sinh.", [
         {
@@ -160,14 +158,14 @@ export default function Register({ navigation }) {
     setErrorName(false);
   };
 
-  const checkSdt = () => {
-    var check = /^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/;
-    if (!check.test(value.sdt)) {
-      setErrorSdt(true);
-      return;
-    }
-    setErrorSdt(false);
-  };
+  // const checkSdt = () => {
+  //   var check = /^\+?([0-9]{2})\)?[-. ]?([0-9]{4})[-. ]?([0-9]{4})$/;
+  //   if (!check.test(value.sdt)) {
+  //     setErrorSdt(true);
+  //     return;
+  //   }
+  //   setErrorSdt(false);
+  // };
 
   const checkEmail = () => {
     if (
@@ -227,7 +225,7 @@ export default function Register({ navigation }) {
             </Text>
           </View>
         )}
-        <View style={[styles.input, , { marginTop: 0 }]}>
+        {/* <View style={[styles.input, , { marginTop: 0 }]}>
           <TextInput
             value={value.sdt}
             onChangeText={(text) => setValue({ ...value, sdt: text })}
@@ -242,7 +240,7 @@ export default function Register({ navigation }) {
               Số điện thoại không hợp lệ, vui lòng nhập lại.
             </Text>
           </View>
-        )}
+        )} */}
         <View style={styles.input}>
           <View style={[styles.input, { flexDirection: "row" }]}>
             <Text style={styles.gender}>Nam</Text>
